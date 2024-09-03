@@ -2,6 +2,7 @@ import React from "react";
 import styles from "./Register.module.css";
 
 import { useState, useEffect } from "react";
+import { useAutenthicator } from "../../hooks/useAutenthicator";
 
 const Register = () => {
   const [displayName, setDisplayName] = useState();
@@ -10,10 +11,12 @@ const Register = () => {
   const [confirmarSenha, setConfirmarSenha] = useState();
   const [error, setError] = useState();
 
-  const handleSubmit = (e) => {
+  const { criarUsuario, error: authError, carregando } = useAutenthicator();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setError();
+    setError("");
 
     const usuario = {
       displayName,
@@ -25,8 +28,22 @@ const Register = () => {
       setError("As senhas não coincindem");
       return;
     }
-    console.log(usuario);
+
+    const res = await criarUsuario(usuario);
+
+    console.log(res);
   };
+
+    useEffect(() => {
+
+      if(authError){
+        setError(authError)
+      }
+
+    }, [authError])
+
+
+
   return (
     <div className={styles.register}>
       <h1>Cadastre-se para postar!</h1>
