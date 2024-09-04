@@ -5,11 +5,11 @@ import { useState, useEffect } from "react";
 import { useAutenthicator } from "../../hooks/useAutenthicator";
 
 const Register = () => {
-  const [displayName, setDisplayName] = useState();
-  const [email, setEmail] = useState();
-  const [senha, setSenha] = useState();
-  const [confirmarSenha, setConfirmarSenha] = useState();
-  const [error, setError] = useState();
+  const [displayName, setDisplayName] = useState("");
+  const [email, setEmail] = useState("");
+  const [senha, setSenha] = useState("");
+  const [confirmarSenha, setConfirmarSenha] = useState("");
+  const [error, setError] = useState("");
 
   const { criarUsuario, error: authError, carregando } = useAutenthicator();
 
@@ -34,15 +34,11 @@ const Register = () => {
     console.log(res);
   };
 
-    useEffect(() => {
-
-      if(authError){
-        setError(authError)
-      }
-
-    }, [authError])
-
-
+  useEffect(() => {
+    if (authError) {
+      setError(authError);
+    }
+  }, [authError]);
 
   return (
     <div className={styles.register}>
@@ -92,7 +88,12 @@ const Register = () => {
             onChange={(e) => setConfirmarSenha(e.target.value)}
           />
         </label>
-        <button className="btn">Cadastrar!</button>
+        {!carregando && <button className="btn">Cadastrar!</button>}
+        {carregando && (
+          <button className="btn" disabled>
+            Aguarde...
+          </button>
+        )}
         {error && <p className="error">{error}</p>}
       </form>
     </div>

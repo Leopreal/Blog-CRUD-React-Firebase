@@ -2,11 +2,9 @@ import { db } from "../firebase/config";
 
 import {
   getAuth,
-  criarUsuarioComEmailESenha,
-  EntrarComEmailESenha,
-  AtualizarPerfil,
-  Sair,
   createUserWithEmailAndPassword,
+  EntrarComEmailESenha,
+  Sair,
   updateProfile,
 } from "firebase/auth";
 
@@ -29,8 +27,8 @@ export const useAutenthicator = () => {
   const criarUsuario = async (data) => {
     checandoSeFoiCancelado();
 
-    setCarregando();
-    setErro(null);
+    setCarregando(true);
+    // setErro(null);
     try {
       const { usuario } = await createUserWithEmailAndPassword(
         auth,
@@ -40,23 +38,26 @@ export const useAutenthicator = () => {
       await updateProfile(usuario, {
         displayName: data.displayName,
       });
+
+      setCarregando(false);
+
       return usuario;
-    } catch (error) {
-      console.log(error.message);
-      console.log(typeof error.message);
+    } catch (erro) {
+      console.log(erro.message);
+      console.log(typeof erro.message);
 
       let ErroDeSistema;
 
-      if (error.message.includes("Password")) {
+      if (erro.message.includes("Password")) {
         ErroDeSistema = "a senha precisa de 6 caracteres";
-      } else if (error.message.includes("email-already")) {
+      } else if (erro.message.includes("email-already")) {
         ErroDeSistema = "usuario ja cadastrado";
       } else {
-        ErroDeSistema = "ocorreu um erro";
+        ErroDeSistema = "ocorreu um erroaaaaaaaaaaaa";
       }
+      setCarregando(false);
       setErro(ErroDeSistema);
     }
-    setCarregando(false);
   };
 
   useEffect(() => {
