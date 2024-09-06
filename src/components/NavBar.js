@@ -6,6 +6,7 @@ import React from "react";
 
 const NavBar = () => {
   const { usuario } = useAuthValue();
+  const { logout } = useAutenthicator();
 
   return (
     <nav className={styles.navbar}>
@@ -69,6 +70,11 @@ const NavBar = () => {
             Sobre
           </NavLink>
         </li>
+        {usuario && (
+          <li>
+            <button onClick={logout}>Sair</button>
+          </li>
+        )}
       </ul>
     </nav>
   );

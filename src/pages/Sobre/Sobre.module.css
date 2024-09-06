@@ -1,0 +1,17 @@
+.sobre {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .sobre p {
+    color: #aaa;
+    margin-bottom: 2em;
+  }
+  
+  .sobre a {
+    display: block;
+    margin-top: 15px;
+    padding: 10px 15px;
+  }

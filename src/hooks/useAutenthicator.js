@@ -3,8 +3,8 @@ import { db } from "../firebase/config";
 import {
   getAuth,
   createUserWithEmailAndPassword,
-  EntrarComEmailESenha,
-  Sair,
+  signInWithEmailAndPassword,
+  signOut,
   updateProfile,
 } from "firebase/auth";
 
@@ -60,6 +60,37 @@ export const useAutenthicator = () => {
     }
   };
 
+  // logout
+  const logout = () => {
+    checandoSeFoiCancelado();
+
+    signOut(auth);
+  };
+
+  // login
+  const login = async (data) => {
+    checandoSeFoiCancelado();
+    setCarregando(true);
+    setErro(false);
+
+    try {
+      await signInWithEmailAndPassword(auth, data.email, data.senha);
+      setCarregando(false);
+    } catch (error) {
+      let ErroSitema;
+
+      if (error.message.includes("user-not-found")) {
+        ErroSitema = "usuario nao encontrado";
+      } else if (error.message.includes("wrong-password")) {
+        ErroSitema = "senha incorreta";
+      } else {
+        ErroSitema = "ocorreu um erro";
+      }
+      setErro(ErroSitema);
+      setCarregando(false);
+    }
+  };
+
   useEffect(() => {
     return () => setCancelado(true);
   }, []);
@@ -69,5 +100,7 @@ export const useAutenthicator = () => {
     criarUsuario,
     erro,
     carregando,
+    logout,
+    login,
   };
 };
