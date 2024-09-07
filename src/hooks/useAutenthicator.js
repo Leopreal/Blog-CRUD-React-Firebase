@@ -1,4 +1,4 @@
-import { db } from "../firebase/config";
+import { app, db } from "../firebase/config";
 
 import {
   getAuth,
@@ -11,13 +11,13 @@ import {
 import { useState, useEffect } from "react";
 
 export const useAutenthicator = () => {
-  const [erro, setErro] = useState(null);
+  const [error, setErro] = useState(null);
   const [carregando, setCarregando] = useState(null);
 
   // cleanup
   const [cancelado, setCancelado] = useState(false);
 
-  const auth = getAuth();
+  const auth = getAuth(app);
 
   function checandoSeFoiCancelado() {
     if (cancelado) {
@@ -28,7 +28,7 @@ export const useAutenthicator = () => {
     checandoSeFoiCancelado();
 
     setCarregando(true);
-    // setErro(null);
+    setErro(null);
     try {
       const { usuario } = await createUserWithEmailAndPassword(
         auth,
@@ -42,15 +42,15 @@ export const useAutenthicator = () => {
       setCarregando(false);
 
       return usuario;
-    } catch (erro) {
-      console.log(erro.message);
-      console.log(typeof erro.message);
+    } catch (error) {
+      console.log(error.message);
+      console.log(typeof error.message);
 
       let ErroDeSistema;
 
-      if (erro.message.includes("Password")) {
+      if (error.message.includes("Password")) {
         ErroDeSistema = "a senha precisa de 6 caracteres";
-      } else if (erro.message.includes("email-already")) {
+      } else if (error.message.includes("email-already")) {
         ErroDeSistema = "usuario ja cadastrado";
       } else {
         ErroDeSistema = "ocorreu um erroaaaaaaaaaaaa";
@@ -84,7 +84,7 @@ export const useAutenthicator = () => {
       } else if (error.message.includes("wrong-password")) {
         ErroSitema = "senha incorreta";
       } else {
-        ErroSitema = "ocorreu um erro";
+        ErroSitema = "email ou senha Inválido";
       }
       setErro(ErroSitema);
       setCarregando(false);
@@ -98,7 +98,7 @@ export const useAutenthicator = () => {
   return {
     auth,
     criarUsuario,
-    erro,
+    error,
     carregando,
     logout,
     login,
