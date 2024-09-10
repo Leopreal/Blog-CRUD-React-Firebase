@@ -1,63 +1,123 @@
+// import { useState, useEffect, useReducer } from "react";
+// import { db } from "../firebase/config";
+// import { collection, addDoc, Timestamp } from "firebase/firestore";
+
+// const EstadoInicial = {
+//   carregando: null,
+//   erro: null,
+// };
+
+// const InserirReducer = (state, action) => {
+//   switch (action.type) {
+//     case "LOADING":
+//       return { carregando: true, erro: null };
+//     case "INSERTED_DOC":
+//       return { carregando: false, erro: null };
+//     case "ERROR":
+//       return { carregando: false, erro: action.carregamento }; // cuidar
+//     default:
+//       return state;
+//   }
+// };
+
+// export const useInserirDocumento = (colecaoDocs) => {
+//   const [response, dispatch] = useReducer(InserirReducer, EstadoInicial);
+
+//   // tratar vazamento de memoria
+//   const [cancelado, setCancelado] = useState(false);
+
+//   const checandoSeFoiCanceladoDepoisDoDispatch = (action) => {
+//     if (!cancelado) {
+//       dispatch(action);
+//     }
+//   };
+
+//   const InserirDocumento = async (documento) => {
+//     checandoSeFoiCanceladoDepoisDoDispatch({
+//       type: "LOADING", // CUIDAR
+//     });
+//     try {
+//       const novoDocumento = { ...documento, criarAt: Timestamp.now() };
+
+//       const DocumentoInserido = await addDoc(
+//         collection(db, colecaoDocs),
+//         novoDocumento
+//       );
+//       checandoSeFoiCanceladoDepoisDoDispatch({
+//         type: "INSERTED_DOC",
+//         carregamento: DocumentoInserido,
+//       });
+//     } catch (error) {
+//       checandoSeFoiCanceladoDepoisDoDispatch({
+//         type: "ERROR",
+//         carregamento: error.message,
+//       });
+//     }
+//   };
+
+//   useEffect(() => {
+//     return () => setCancelado(true);
+//   }, []);
+
+//   return { InserirDocumento, response };
+// };
 import { useState, useEffect, useReducer } from "react";
 import { db } from "../firebase/config";
 import { collection, addDoc, Timestamp } from "firebase/firestore";
 
-const EstadoInicial = {
-  carregando: null,
+const initialState = {
+  loading: null,
   error: null,
 };
 
-const InserirReducer = (state, action) => {
+const insertReducer = (state, action) => {
   switch (action.type) {
     case "LOADING":
-      return { carregando: true, error: null };
+      return { loading: true, error: null };
     case "INSERTED_DOC":
-      return { carregando: false, error: null };
+      return { loading: false, error: null };
     case "ERROR":
-      return { carregando: false, error: action.payload }; // cuidar
+      return { loading: false, error: action.payload };
     default:
       return state;
   }
 };
 
-export const useInserirDocumento = (colecaoDocs) => {
-  const [response, dispatch] = useReducer(InserirReducer, EstadoInicial);
+export const useInsertDocument = (docCollection) => {
+  const [response, dispatch] = useReducer(insertReducer, initialState);
 
-  // tratar vazamento de memoria
-  const [cancelado, setCancelado] = useState(false);
+  // deal with memory leak
+  const [cancelled, setCancelled] = useState(false);
 
-  const checandoSeFoiCanceladoDepoisDoDispatch = (action) => {
-    if (!cancelado) {
+  const checkCancelBeforeDispatch = (action) => {
+    if (!cancelled) {
       dispatch(action);
     }
   };
 
-  const InserirDocumento = async (documento) => {
-    checandoSeFoiCanceladoDepoisDoDispatch({
-      type: "LOADING", // CUIDAR
-    });
-    try {
-      const novoDocumento = { ...documento, criarAt: Timestamp.now() };
+  const insertDocument = async (document) => {
+    checkCancelBeforeDispatch({ type: "LOADING" });
 
-      const DocumentoInserido = await addDoc(
-        collection(db, colecaoDocs),
-        novoDocumento
+    try {
+      const newDocument = { ...document, createdAt: Timestamp.now() };
+
+      const insertedDocument = await addDoc(
+        collection(db, docCollection),
+        newDocument
       );
-      checandoSeFoiCanceladoDepoisDoDispatch({
+
+      checkCancelBeforeDispatch({
         type: "INSERTED_DOC",
-        payload: DocumentoInserido,
+        payload: insertedDocument,
       });
     } catch (error) {
-      checandoSeFoiCanceladoDepoisDoDispatch({
-        type: "ERROR",
-        payload: error.message,
-      });
+      checkCancelBeforeDispatch({ type: "ERROR", payload: error.message });
     }
   };
 
   useEffect(() => {
-    return () => setCancelado(true);
+    return () => setCancelled(true);
   }, []);
 
-  return { InserirDocumento, response };
+  return { insertDocument, response };
 };
