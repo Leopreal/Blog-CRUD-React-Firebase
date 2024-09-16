@@ -22,14 +22,14 @@ import CriarPost from "./pages/CriarPost/CriarPost";
 import Dashboard from "./pages/Dashboard/Dashboard";
 
 function App() {
-  const [usuario, setUsuario] = useState(undefined);
+  const [user, setUsuario] = useState(undefined);
   const { auth } = useAutenthicator();
 
-  const carregandoUsuario = usuario === undefined;
+  const carregandoUsuario = user === undefined;
 
   useEffect(() => {
-    onAuthStateChanged(auth, (usuario) => {
-      setUsuario(usuario);
+    onAuthStateChanged(auth, (user) => {
+      setUsuario(user);
     });
   }, [auth]);
 
@@ -39,7 +39,7 @@ function App() {
 
   return (
     <div className="App">
-      <AuthProvider value={{ usuario }}>
+      <AuthProvider value={{ user }}>
         <BrowserRouter>
           <NavBar />
           <div className="container">
@@ -48,19 +48,19 @@ function App() {
               <Route path="/sobre" element={<Sobre />} />
               <Route
                 path="/login"
-                element={!usuario ? <Login /> : <Navigate to={"/"} />}
+                element={!user ? <Login /> : <Navigate to={"/"} />}
               />
               <Route
                 path="/register"
-                element={!usuario ? <Register /> : <Navigate to={"/"} />}
+                element={!user ? <Register /> : <Navigate to={"/"} />}
               />
               <Route
                 path="/posts/criar"
-                element={usuario ? <CriarPost /> : <Navigate to={"/login"} />}
+                element={user ? <CriarPost /> : <Navigate to={"/login"} />}
               />
               <Route
                 path="/dashboard"
-                element={usuario ? <Dashboard /> : <Navigate to={"/login"} />}
+                element={user ? <Dashboard /> : <Navigate to={"/login"} />}
               />
             </Routes>
           </div>

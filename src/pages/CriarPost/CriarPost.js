@@ -12,7 +12,7 @@ const CriarPost = () => {
   const [tags, setTags] = useState([]);
   const [formError, setFormError] = useState("");
 
-  const { usuario } = useAuthValue();
+  const { user } = useAuthValue();
 
   const navigate = useNavigate();
 
@@ -30,22 +30,22 @@ const CriarPost = () => {
     }
 
     //create tags array
-    const tagsArray = tags.split(",").map((tag) => tag.trim().toLowerCase());
+    // const tagsArray = tags.split(",").map((tag) => tag.trim().toLowerCase());
 
     //check values
     if (!title || !image || !tags || !body) {
       setFormError("Por favor, preencha todos os campos!");
     }
 
-    console.log(tagsArray);
+    // console.log(tagsArray);
 
     console.log({
       title,
       image,
       body,
-      tags: tagsArray,
-      uid: usuario.uid,
-      createdBy: usuario.displayName,
+      tags,
+      uid: user.uid,
+      createdBy: user.displayName,
     });
 
     if (formError) return;
@@ -54,9 +54,9 @@ const CriarPost = () => {
       title,
       image,
       body,
-      tags, //:tagsArray,
-      uid: usuario.uid,
-      createdBy: usuario.displayName,
+      tags,
+      uid: user.uid,
+      createdBy: user.displayName,
     });
 
     // redirect to home page

@@ -5,7 +5,7 @@ import styles from "./NavBar.module.css";
 import React from "react";
 
 const NavBar = () => {
-  const { usuario } = useAuthValue();
+  const { user } = useAuthValue();
   const { logout } = useAutenthicator();
 
   return (
@@ -22,7 +22,7 @@ const NavBar = () => {
             Home
           </NavLink>
         </li>
-        {!usuario && (
+        {!user && (
           <>
             <li>
               <NavLink
@@ -42,7 +42,7 @@ const NavBar = () => {
             </li>
           </>
         )}
-        {usuario && (
+        {user && (
           <>
             <li>
               <NavLink
@@ -70,7 +70,7 @@ const NavBar = () => {
             Sobre
           </NavLink>
         </li>
-        {usuario && (
+        {user && (
           <li>
             <button onClick={logout}>Sair</button>
           </li>

@@ -18,7 +18,7 @@ const Register = () => {
 
     setError("");
 
-    const usuario = {
+    const user = {
       displayName,
       email,
       senha,
@@ -29,7 +29,7 @@ const Register = () => {
       return;
     }
 
-    const res = await criarUsuario(usuario);
+    const res = await criarUsuario(user);
 
     console.log(res);
   };

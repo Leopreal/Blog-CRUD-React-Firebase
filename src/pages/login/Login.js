@@ -15,12 +15,12 @@ const Login = () => {
 
     setError("");
 
-    const usuario = {
+    const user = {
       email,
       senha,
     };
 
-    const res = await login(usuario);
+    const res = await login(user);
 
     console.log(res);
   };

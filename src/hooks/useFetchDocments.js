@@ -6,15 +6,10 @@ import {
   orderBy,
   onSnapshot,
   where,
-  QuerySnapshot, // ATENCAO
 } from "firebase/firestore";
 
-export const useFetchDocuments = (
-  docCollections,
-  search = null,
-  uid = null
-) => {
-  const [docments, setDocuments] = useState(null);
+export const useFetchDocments = (docCollections, search = null, uid = null) => {
+  const [documents, setDocuments] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(null);
 
@@ -34,7 +29,7 @@ export const useFetchDocuments = (
         // busca
         // dashboard
 
-        q = await query(RefCollection, orderBy("createAt", "desc"));
+        q = await query(RefCollection, orderBy("createdAt", "desc"));
 
         await onSnapshot(q, (querySnapshot) => {
           setDocuments(
@@ -44,6 +39,7 @@ export const useFetchDocuments = (
             }))
           );
         });
+        setLoading(false);
       } catch (error) {
         console.log(error);
         setError(error.message);
@@ -58,5 +54,5 @@ export const useFetchDocuments = (
     return () => setCancelled(true);
   }, []);
 
-  return { docments, loading, error };
+  return { documents, loading, error };
 };
