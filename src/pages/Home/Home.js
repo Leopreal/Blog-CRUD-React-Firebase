@@ -11,8 +11,14 @@ const Home = () => {
   const [query, setQuery] = useState("");
   const { documents: posts, loading } = useFetchDocments("posts");
 
+  const navigate = useNavigate();
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (query) {
+      return navigate(`/search?q=${query}`);
+    }
   };
   return (
     <div className={styles.home}>
@@ -21,7 +27,7 @@ const Home = () => {
         <input
           type="text"
           placeholder="Busque por tags"
-          onChange={(e) => e.target.value}
+          onChange={(e) => setQuery(e.target.value)}
         />
         <button className="btn btn-dark">Pesquisar</button>
       </form>
