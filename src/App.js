@@ -47,7 +47,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/sobre" element={<Sobre />} />
-              <Route path="/seach" element={<Search />} />
+              <Route path="/search" element={<Search />} />
               <Route
                 path="/login"
                 element={!user ? <Login /> : <Navigate to={"/"} />}
