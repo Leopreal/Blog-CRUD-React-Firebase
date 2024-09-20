@@ -32,6 +32,12 @@ export const useFetchDocments = (docCollections, search = null, uid = null) => {
             where("tagsArray", "array-contains", search),
             orderBy("createdAt", "desc")
           );
+        } else if (uid) {
+          q = await query(
+            RefCollection,
+            where("uid", "==", uid),
+            orderBy("createdAt", "desc")
+          );
         } else {
           q = await query(RefCollection, orderBy("createdAt", "desc"));
         }
