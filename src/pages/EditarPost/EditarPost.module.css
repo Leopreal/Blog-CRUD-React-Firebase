@@ -1,0 +1,12 @@
+.editarpost {
+    text-align: center;
+  }
+  
+  .editarpost h2 {
+    font-size: 2.2em;
+  }
+  
+  .editarpost p {
+    color: #aaa;
+    margin-bottom: 2em;
+  }

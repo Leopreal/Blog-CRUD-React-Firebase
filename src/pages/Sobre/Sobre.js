@@ -12,7 +12,7 @@ const Sobre = () => {
         Este projeto consiste em um blog feito com React no front-end e Firebase
         no back-end.
       </p>
-      <Link to="/posts/create" className="btn">
+      <Link to="/posts/criar" className="btn">
         Criar post
       </Link>
     </div>
